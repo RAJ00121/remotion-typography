@@ -14,7 +14,7 @@ env:
 jobs:
   render:
     name: Render Typography Video
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Check out repository
@@ -25,15 +25,15 @@ jobs:
         with:
           node-version: 22
 
-      - name: Install pnpm directly
+      - name: Enable Corepack & pnpm
         run: |
           corepack enable
           corepack prepare pnpm@10.5.2 --activate
 
-      - name: Install system dependencies & Chromium/FFmpeg
+      - name: Install system dependencies (FFmpeg & Chromium)
         run: |
           sudo apt-get update
-          sudo apt-get install -y ffmpeg chromium-browser fonts-inter fonts-montserrat libnss3 libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 libxkbcommon-x11-0 libxcomposite1 libxdamage1 libxrandr2 libgbm1 libasound2
+          sudo apt-get install -y ffmpeg chromium-browser
 
       - name: Install Node packages
         run: pnpm install --no-frozen-lockfile
