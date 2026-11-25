@@ -1,0 +1,53 @@
+name: Render Remotion Video
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  render:
+    name: Render Typography Video
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js (Node 22 LTS)
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+
+      - name: Install system dependencies & Chromium/FFmpeg
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg chromium-browser fonts-inter fonts-montserrat libnss3 libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 libxkbcommon-x11-0 libxcomposite1 libxdamage1 libxrandr2 libgbm1 libasound2
+
+      - name: Install Node packages
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Render Remotion Video (Vertical 9:16)
+        run: |
+          mkdir -p out
+          pnpm exec remotion render src/index.ts TypographyAnimation out/reflections_vertical.mp4 --concurrency=2
+
+      - name: Render Remotion Video (Landscape 16:9)
+        run: |
+          pnpm exec remotion render src/index.ts TypographyAnimationLandscape out/reflections_landscape.mp4 --concurrency=2
+
+      - name: Upload Rendered Videos as Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: remotion-rendered-videos
+          path: out/*.mp4
+          retention-days: 14
