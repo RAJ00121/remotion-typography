@@ -41,11 +41,11 @@ jobs:
       - name: Render Remotion Video (Vertical 9:16)
         run: |
           mkdir -p out
-          pnpm exec remotion render src/index.ts TypographyAnimation out/reflections_vertical.mp4 --concurrency=2
+          pnpm exec remotion render src/index.tsx TypographyAnimation out/reflections_vertical.mp4 --concurrency=2
 
       - name: Render Remotion Video (Landscape 16:9)
         run: |
-          pnpm exec remotion render src/index.ts TypographyAnimationLandscape out/reflections_landscape.mp4 --concurrency=2
+          pnpm exec remotion render src/index.tsx TypographyAnimationLandscape out/reflections_landscape.mp4 --concurrency=2
 
       - name: Upload Rendered Videos as Artifacts
         uses: actions/upload-artifact@v4
